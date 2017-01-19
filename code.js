@@ -1,3 +1,6 @@
+var debug = false;
+var bigwall = false;
+
 var cols=100;
 var rows=100;
 
@@ -25,10 +28,19 @@ function Spot(x, y) {
   this.previous = undefined;
   this.wall = false;
 
-  if (random(1) < 0.4) {
+  if (random(1) < 0.2) {
     this.wall = true;
   }
 
+  if(bigwall) {
+    if (this.x > 3 && this.x < cols-10 && (this.y == 12 || this.y==rows-50)) {
+      this.wall = true;
+    }
+
+    if (this.y < rows-10 && this.x == cols-30) {
+      this.wall = true;
+    }
+  }
   this.show = function(col) {
     noStroke();
     if(this.wall) {
@@ -59,10 +71,10 @@ function setup() {
   }
 
   start = grid[0];
-  end = grid[cols*rows - cols];
+  end = grid[grid.length - 1];
   start.wall = false;
   end.wall = false;
-  
+
   openSet.push(start);
 
   start.h = heuristics(start, end);
@@ -161,12 +173,14 @@ function draw() {
     grid[i].show(undefined);
   }
 
-//  for (var i = 0; i < openSet.length; i++) {
-//    openSet[i].show(color(0,255,0));
-//  }
-//  for (var i = 0; i < closedSet.length; i++) {
-//    closedSet[i].show(color(255,0,0));
-//  }
+  if (debug) {
+    for (var i = 0; i < openSet.length; i++) {
+      openSet[i].show(color(0,255,0));
+    }
+    for (var i = 0; i < closedSet.length; i++) {
+      closedSet[i].show(color(255,0,0));
+    }
+  }
 
   // Find the path
   var path = [];
