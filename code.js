@@ -81,6 +81,43 @@ function setup() {
   start.f = heuristics(start, end);
 }
 
+function getNeighbors(current) {
+  var neighbors = [];
+
+  if (current.x > 0) {
+    // To the left
+    neighbors.push(grid[(current.x + cols * current.y) - 1]);
+  }
+  if (current.x < cols-1) {
+    // To the right
+    neighbors.push(grid[(current.x + cols * current.y) + 1]);
+  }
+  if (current.y > 0) {
+    // Above
+    neighbors.push(grid[(current.x + cols * current.y) - cols]);
+    if (current.x > 0) {
+      // Up to the left
+      neighbors.push(grid[(current.x + cols * current.y) - cols - 1]);
+    }
+    if (current.x < cols-1) {
+      // Up to the right
+      neighbors.push(grid[(current.x + cols * current.y) - cols + 1]);
+    }
+  }
+  if (current.y < rows-1) {
+    // Belove
+    neighbors.push(grid[(current.x + cols * current.y) + cols]);
+    if (current.x > 0) {
+      // Belove to the left
+      neighbors.push(grid[(current.x + cols * current.y) + cols - 1]);
+    }
+    if (current.x < cols-1 ) {
+      // Belove to the right
+      neighbors.push(grid[(current.x + cols * current.y) + cols + 1])
+    }
+  }
+  return neighbors;
+}
 
 function draw() {
   for(var s = 0; s < speedUp; s++) {
@@ -105,39 +142,7 @@ function draw() {
       closedSet.push(current);
 
       // Get neighbors
-      neighbors=[];
-      if (current.x > 0) {
-        // To the left
-        neighbors.push(grid[(current.x + cols * current.y) - 1]);
-      }
-      if (current.x < cols-1) {
-        // To the right
-        neighbors.push(grid[(current.x + cols * current.y) + 1]);
-      }
-      if (current.y > 0) {
-        // Above
-        neighbors.push(grid[(current.x + cols * current.y) - cols]);
-        if (current.x > 0) {
-          // Up to the left
-          neighbors.push(grid[(current.x + cols * current.y) - cols - 1]);
-        }
-        if (current.x < cols-1) {
-          // Up to the right
-          neighbors.push(grid[(current.x + cols * current.y) - cols + 1]);
-        }
-      }
-      if (current.y < rows-1) {
-        // Belove
-        neighbors.push(grid[(current.x + cols * current.y) + cols]);
-        if (current.x > 0) {
-          // Belove to the left
-          neighbors.push(grid[(current.x + cols * current.y) + cols - 1]);
-        }
-        if (current.x < cols-1 ) {
-          // Belove to the right
-          neighbors.push(grid[(current.x + cols * current.y) + cols + 1])
-        }
-      }
+      var neighbors = getNeighbors(current);
 
       for (var j = 0; j < neighbors.length; j++) {
         var neighbor = neighbors[j];
